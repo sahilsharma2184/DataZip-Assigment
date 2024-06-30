@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: superset
+  template:
+    metadata:
+      labels:
+        app: superset
+    spec:
+      containers:
+      - name: superset
+        image: apache/superset:latest
+        ports:
+        - containerPort: 8088
+          name: web
+        env:
+        - name: SUPERSET_SECRET_KEY
+          value: sahil1114
+        command:
+        - "/bin/sh"
+        - "-c"
+        - |
+          pip install clickhouse-connect
+          superset db upgrade
+          superset fab create-admin \
+              --username admin \
+              --firstname Superset \
+              --lastname Admin \
+              --email admin@superset.com \
+              --password admin
+          superset init
+          gunicorn --bind  0.0.0.0:8088 \
+              --worker-class gthread \
+              --workers 10 \
+              --timeout 120 \
+              --limit-request-line 0 \
+              --limit-request-field_size 0 \
+              "superset.app:create_app()"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: superset
+spec:
+  selector:
+    app: superset
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 8088
+      name: web
+  type: NodePort
