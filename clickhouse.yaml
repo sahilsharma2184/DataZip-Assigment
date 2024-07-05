@@ -70,8 +70,8 @@ spec:
     - port: 9000
       targetPort: 9000
       name: native
-    - port: 8123
-      targetPort: 8123
+    - port: 8478
+      targetPort: 8478
       name: http
   type: ClusterIP
 ---
@@ -88,7 +88,7 @@ spec:
       targetPort: 9000
       nodePort: 30900
       name: native
-    - port: 8123
-      targetPort: 8123
+    - port: 8478
+      targetPort: 8478
       nodePort: 31000
       name: http
