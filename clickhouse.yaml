@@ -19,7 +19,7 @@ spec:
         ports:
         - containerPort: 9000
           name: native
-        - containerPort: 8123
+        - containerPort: 8478
           name: http
         volumeMounts:
         - name: clickhouse-data
